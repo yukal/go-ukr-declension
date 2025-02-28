@@ -120,6 +120,89 @@ var vocabulary = map[string][]string{
 	// "ож": {'ожі', 'ожі', 'ож', 'іжжю', 'ожі', 'оже'},
 }
 
+// TODO
+// this is a temporary solution
+var rules2nd = [][]string{
+	{"а", "у", "а", "ом", "ові", "е"},
+	{"я", "ю", "я", "єм", "єві", "є"},
+}
+
+// TODO
+// this is a temporary solution
+var endings2nd = map[string]uint8{
+	"ай": 1,
+	"ей": 1,
+	"ий": 1,
+	"ій": 1,
+	"ой": 1,
+	"ль": 1,
+	"сь": 1,
+	// "ць": {"я", "ю", "я", "ем", "еві", "е"},
+}
+
+// TODO
+// this is a temporary solution
+var exceptions = map[string][]string{
+	"яків":      {"ова", "ову", "ова", "овом", "ові", "ове"},
+	"сокіл":     {"ола", "олу", "ола", "олом", "олові", "оле"},
+	"федір":     {"ора", "ору", "ора", "ором", "орі", "оре"},
+	"гострозір": {"ора", "ору", "ора", "ором", "орі", "оре"},
+	"дивозір":   {"ора", "ору", "ора", "ором", "орі", "оре"},
+	"яснозір":   {"ора", "ору", "ора", "ором", "орі", "оре"},
+	"снозір":    {"ора", "ору", "ора", "ором", "орі", "оре"},
+	"явір":      {"ора", "ору", "ора", "ором", "орі", "оре"},
+	"соловей":   {"ʼя", "ʼю", "ʼя", "ʼєм", "ʼєві", "ʼю"},
+}
+
+func manNounToCaseN(name string, caseNum uint8) string {
+	// defer func() {
+	// 	if r := recover(); r != nil {
+	// 		log.Printf("recovered: %v\n", r)
+	// 	}
+	// }()
+
+	r := []rune(name)
+	l := len(r)
+
+	suffix := string(r[l-2:])
+
+	// 1st Declension
+	// ая
+
+	if ending, exist := vocabulary[suffix]; exist {
+		return runeUcFirst(r[:l-2]) + ending[caseNum-2]
+	}
+
+	// 2nd Declension
+	// бвгджзйклмнпрстфхцчшщ + о
+
+	// Українські чоловічі імена, що в називному відмінку однини закінчуються
+	// на приголосний та –о, відмінюємо як відповідні іменники II відміни:
+	//
+	// Н.	Олéг			Антíн			Дмитр-ó
+	// Р.	Олéг-а			Антóн-а			Дмитр-á
+	// Д.	Олéг-ові (-у)	Антóн-ові (-у)	Дмитр-óві (-у)
+	// Зн.	Олéг-а			Антóн-а			Дмитр-á
+	// Ор.	Олéг-ом			Антóн-ом		Дмитр-óм
+	// М.	Олéг-ові (-у)	Антóн-ові (-у)	Дмитр-óві (-у)
+	// Кл.	Олéж-е	 (-у)	Антóн-е			Дми́тр-е
+
+	if strings.HasSuffix(name, "о") {
+		return runeUcFirst(r[:l-1]) + "а"
+	}
+
+	// TODO: this is a temporary solution...
+	if ending, exist := exceptions[name]; exist {
+		return runeUcFirst(r[:l-2]) + ending[caseNum-2]
+	}
+
+	if ruleIdx, exist := endings2nd[suffix]; exist {
+		return runeUcFirst(r[:l-1]) + rules2nd[ruleIdx][caseNum-2]
+	}
+
+	return runeUcFirst(r) + rules2nd[0][caseNum-2]
+}
+
 func femNounPartsToCaseN(nameParts []string, caseNum uint8) string {
 	if l := len(nameParts); l > 1 {
 		return femNounPartsToCaseN(nameParts[:l-1], caseNum) +
