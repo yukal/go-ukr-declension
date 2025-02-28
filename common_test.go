@@ -7,10 +7,15 @@ import (
 	"github.com/franela/goblin"
 )
 
+// The possibility of conducting tests in a specific group:
+// For more details see testing_helper.go
+//
 // go test -v -count=1 ./...
 // go test -v -count=1 -run Common ./...
+// go test -v -count=1 -run Basic ./...
+// go test -v -count=1 -run General ./...
 
-func TestCommon(t *testing.T) {
+func TestBasicGeneralCommon(t *testing.T) {
 	g := goblin.Goblin(t)
 
 	g.Describe("Stemming", func() {
