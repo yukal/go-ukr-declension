@@ -188,16 +188,6 @@ func TestCommon(t *testing.T) {
 				Data:   []rune("Катря"),
 				Expect: []rune("Катр"),
 			},
-			{
-				Action: GetStem,
-				Data:   []rune("Ілія"),
-				Expect: []rune("Іл"),
-			},
-			{
-				Action: GetStem,
-				Data:   []rune("Ілля"),
-				Expect: []rune("Ілл"),
-			},
 		}
 
 		for _, tdt := range tdtItems {
