@@ -180,13 +180,13 @@ func TestCommon(t *testing.T) {
 			},
 			{
 				Action: GetStem,
-				Data:   []rune("Цикорію"),
-				Expect: []rune("Цикор"),
+				Data:   []rune("Ендрю"),
+				Expect: []rune("Ендр"),
 			},
 			{
 				Action: GetStem,
-				Data:   []rune("Катря"),
-				Expect: []rune("Катр"),
+				Data:   []rune("Юлія"),
+				Expect: []rune("Юл"),
 			},
 		}
 
