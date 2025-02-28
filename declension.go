@@ -120,6 +120,15 @@ var vocabulary = map[string][]string{
 	// "ож": {'ожі', 'ожі', 'ож', 'іжжю', 'ожі', 'оже'},
 }
 
+func femNounPartsToCaseN(nameParts []string, caseNum uint8) string {
+	if l := len(nameParts); l > 1 {
+		return femNounPartsToCaseN(nameParts[:l-1], caseNum) +
+			"-" + femNounToCaseN(nameParts[l-1], caseNum)
+	}
+
+	return femNounToCaseN(nameParts[0], caseNum)
+}
+
 func femNounToCaseN(name string, caseNum uint8) string {
 	r := []rune(name)
 	l := len(r)
